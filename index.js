@@ -3,7 +3,7 @@ import Quadtree from './qt.js';
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
-const AMOUNT_OF_ENTITIES = 50;
+const AMOUNT_OF_ENTITIES = 500;
 
 const SCALE = 0.6;
 canvas.width = 1920 * SCALE;
@@ -50,15 +50,24 @@ window.onmousemove = e => {
 class Circle {
 	constructor() {
 		this.radius = this.width = this.height = randomNumber(4, 15);
-		this.x = randomNumber(this.radius, canvas.width - this.radius);
-		this.y = randomNumber(this.radius, canvas.height - this.radius);
+		/**
+		 * The quadtree will look at the x/y as the top left point, and use the width/height accordingly
+		 * pos: drawing position
+		 * x,y: the top left origin of the circle
+		 */
+		this.pos = {
+			x: randomNumber(this.radius, canvas.width - this.radius),
+			y: randomNumber(this.radius, canvas.height - this.radius),
+		};
+		this.x = this.pos.x - this.width / 2;
+		this.y = this.pos.y - this.height / 2;
 		this.color = 'red';
 	}
 	draw() {
 		c.save();
 		c.beginPath();
 		c.fillStyle = this.color;
-		c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+		c.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
 		c.fill();
 		c.restore();
 		this.color = 'red';
