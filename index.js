@@ -62,6 +62,27 @@ class Circle {
 		this.x = this.pos.x - this.width / 2;
 		this.y = this.pos.y - this.height / 2;
 		this.color = 'red';
+
+		this.angle = Math.random() * 7;
+		this.velocity = {
+			x: Math.cos(this.angle),
+			y: Math.sin(this.angle),
+		};
+	}
+	update() {
+		this.pos.x += this.velocity.x;
+		this.pos.y += this.velocity.y;
+		// check left/right collisions
+		if (this.pos.x + this.radius >= canvas.width) this.velocity.x *= -1;
+		if (this.pos.x - this.radius <= 0) this.velocity.x *= -1;
+		//check top/bottom collisions
+		if (this.pos.y + this.radius >= canvas.height) this.velocity.y *= -1;
+		if (this.pos.x - this.radius <= 0) this.velocity.y *= -1;
+		// set the correct value for the quadtree
+		this.x = this.pos.x - this.width / 2;
+		this.y = this.pos.y - this.height / 2;
+
+		this.draw();
 	}
 	draw() {
 		c.save();
@@ -86,7 +107,7 @@ function animate() {
 
 	mouse.update();
 
-	entities.forEach(ent => ent.draw());
+	entities.forEach(ent => ent.update());
 
 	requestAnimationFrame(animate);
 }
